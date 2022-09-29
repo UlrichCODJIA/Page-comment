@@ -1,43 +1,37 @@
-chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
-    switch (message.type) {
-        case "launch":
+chrome.runtime.onMessage.addListener((response, callback) => {
+    if (response.message == "start") {
+        var currentHref = window.location.href;
+        var targetHref = getTargetHref(currentHref);
+        issueAlert("Redirecting to target page. Click 'OK' to proceed.");
+        console.log("Attempting to load page: " + targetHref);
+        chrome.runtime.sendMessage({ "message": "open_new_tab", "url": targetHref });
             window.open(window.location.href.replace("www.facebook.com", "m.facebook.com"), "_blank")
-            return;
-        case "expand":
             //to click more
             document.querySelector("._108_").click()
             // click on subcomments
             document.querySelectorAll("._2b1h.async_elem > a").forEach(a => a.click())
             // click on loadmore subcomments
             document.querySelectorAll("._2b1l > a.async_elem").forEach(a => a.click())
-            
-            return;
-        case "extract":
             let list = [];
-            
             let comments = document.querySelectorAll("._2b04"); //Find all comments on page
-            
             for (var i = 0; i < comments.length; ) {
                 i += findChildComments(comments[i],list); // Comments processing and hierarchy creation
             }
-            
-
             download(JSON.stringify(list, null, 2), 'report.json', 'text/plain');
-            return;
-
-        case "exportFile":
-            window.open("https://json-csv.com/", "_blanks")
-            return;
-        // // var encodedUri = encodeURI(csvContent);
-        // var link = document.createElement("a");
-        // link.setAttribute("href", JSON.stringify(list, null, 2));
-        // link.setAttribute("download", "facebook-comments-report.json");
-        // link.target = '_blank';
-        // link.style.display = "none";
-        // document.body.appendChild(link);
-        // link.click();
     }
 })
+
+function getTargetHref(firstHref) {
+    var targetHref = '';
+    var matchOne = firstHref.match(/(?:https?\:\/\/|www\.)(?:facebook)(?:.com\/)/i);
+    if (matchOne) {
+        targetHref = firstHref.replace("www.facebook.com", "m.facebook.com")
+    }
+    else {
+        const error = "Your current page must start by 'www'"
+    }
+    return targetHref
+}
 
 function findChildComments(comment, list){
     let index = 0;
@@ -50,8 +44,7 @@ function findChildComments(comment, list){
         let name = i.children[0].innerText;
         let link = i.children[0].children[0] && i.children[0].children[0].attributes && (i.children[0].children[0].attributes[i.children[0].children[0].attributes.length - 1].textContent || "ERRORERROR")
         link = `https://www.facebook.com${link}`
-        let comment = i.children[1].innerHTML;
-        let postedIn = window.location.href;
+        newComment[name] = link;
         newComment = { name, link, comment, postedIn,child:[] };
         list.push(newComment);
     }

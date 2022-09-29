@@ -1,44 +1,76 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <title>PageReact</title>
+    <meta charset="utf-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="xlsx.full.min.js"></script>
+    <style>
+      body {
+        width: 500px;
+      }
+      button {
+        background-color: #336dab;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        font-size: 16px;
+      }
+      .loader {
+        border: 10px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 10px solid #3498db;
+        width: 30px;
+        height: 30px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+        margin-left: 200px;
+        margin-top: 20px;
+      }
 
-<head>
-  <meta charset="utf-8">
-  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
+      /* Safari */
+      @-webkit-keyframes spin {
+        0% {
+          -webkit-transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+        }
+      }
 
-      width: 300px;
-      height: 300px;
-
-      border-radius: 1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-  </style>
-</head>
-
-<body class="bg-red-200">
-  <div class="flex flex-col justify-center text-center">
-    <h1>Export Facebook Comments</h1>
-
-    <button class="py-4 px-4 my-1 rounded-md hover:shadow-md text-white bg-red-700 hover:bg-red-800" type="button"
-      id="launch">1. Launch in mobile Facebook</button>
-    <button class="py-4 px-4 my-1 rounded-md hover:shadow-md text-white bg-red-600 hover:bg-red-800" type="button"
-      id="expand">2. Expand more comments</button>
-    <button class="py-4 px-4 my-1 rounded-md hover:shadow-md text-white bg-red-500 hover:bg-red-800" type="button"
-      id="extract">3. Save as .json</button>
-    <button class="py-4 px-4 my-1 rounded-md hover:shadow-md text-white bg-red-400 hover:bg-red-800" type="button"
-      id="export">4. Launch link to convert to csv</button>
-
-    <span>Developed by <a class="underline" target="_blank" href="http://linkedin.com/in/alishahlakhani/">Ali Shah
-        Lakhani</a></span>
-  </div>
-
-  <script src="scripts/popup.js"></script>
-</body>
-
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-3" style="width: 450px">
+      <h2 class="text-center">UID's of people who had reacted</h2>
+      <div class="col-md-12 text-center">
+        <button id="get_uid">Get UID</button>
+        <br>
+        <div class="loader" id="load" style="display: none"></div>
+      </div>      
+      <br />
+      <table class="table table-bordered" id="uid_table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>UID</th>
+          </tr>
+        </thead>
+        <tbody id="list_of_uid"></tbody>
+      </table>
+    </div>
+  </body>
+  <script type="module" src="popup.js"></script>
 </html>

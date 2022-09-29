@@ -1,31 +1,21 @@
 function expand() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { expand: true, type: 'expand' })
-    })
+  chrome.runtime.sendMessage({ expand: true, type: "start Page Comment" },function (response) {console.log("start Page Comment")});
 }
 
 function extract() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { extract: true, type: 'extract' })
-    })
+  chrome.runtime.sendMessage({ extract: true, type: "extract" },function (response) {console.log("start Page Comment")});
 }
 
 function launch() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { launch: true, type: 'launch' })
-    })
+  chrome.runtime.sendMessage({ launch: true, type: "start" },function (response) {console.log("start Page Comment")});
 }
 function exportFile() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { exportFile: true, type: 'exportFile' })
-    })
+  chrome.runtime.sendMessage({ exportFile: true, type: "exportFile" },function (response) {console.log("start Page Comment")});
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById("expand").addEventListener("click", expand)
-    document.getElementById("extract").addEventListener("click", extract)
-    document.getElementById("launch").addEventListener("click", launch)
-    document.getElementById("export").addEventListener("click", exportFile)
-})
-
-
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("expand").addEventListener("click", expand);
+  document.getElementById("extract").addEventListener("click", extract);
+  document.getElementById("launch").addEventListener("click", launch);
+  document.getElementById("export").addEventListener("click", exportFile);
+});
