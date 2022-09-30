@@ -4,16 +4,15 @@ chrome.runtime.onMessage.addListener((response, callback) => {
     const targetHref = getTargetHref(currentHref);
     if (targetHref["error"] == false) {
       issueAlert("Redirecting to target page. Click 'OK' to proceed.");
-      console.log("Attempting to load page: " + targetHref);
-      chrome.runtime.sendMessage({ message: "open_new_tab", error: false, url: targetHref });
+      console.log("Attempting to load page: " + targetHref["targetHref"]);
+      chrome.runtime.sendMessage({ message: "open_new_tab", error: false, url: targetHref["targetHref"] });
     } else {
       chrome.runtime.sendMessage(
         {
           message: "open_new_tab",
           error: true,
           error_message: targetHref["message"],
-        },
-        function (response) {}
+        }
       );
     }
   }
@@ -34,4 +33,9 @@ function getTargetHref(currentHref) {
     context["error"] = true;
   }
   return context;
+}
+
+function issueAlert(msg) {
+    console.log("RaisedAlert: " + msg)
+    alert(msg);
 }
