@@ -12,7 +12,8 @@
   },
   "permissions": [
     "tabs",
-    "storage"
+    "storage",
+    "scripting"
   ],
   "host_permissions": ["http://*/*", "https://*/*"],
   "content_scripts": [{
