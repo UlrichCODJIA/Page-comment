@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener(async (response, callback) => {
     chrome.scripting.executeScript(
       {
         target: { tabId: new_tab_id },
-        files: ["getuid.js"],
+        files: ["./getuid.js"],
       }
     );
   }

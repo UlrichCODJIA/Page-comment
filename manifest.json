@@ -22,7 +22,7 @@
       "https://*/*"
     ],
       "all_frames": true,
-      "js": ["./scripts/contentscript.js", "./scripts/getuid.js"]
+      "js": ["./scripts/contentscript.js"]
   }],
   "action": {
     "default_icon": {
