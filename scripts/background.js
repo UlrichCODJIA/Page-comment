@@ -2,9 +2,9 @@ var new_tab_id
 
 //To detect get UID button click action on popup
 chrome.runtime.onMessage.addListener(async (response, callback) => {
-  if (response.message === "start Page Comment") {
+  if (response.message === "open_mfacebook") {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    chrome.runtime.sendMessage({ message: "start"});
+    chrome.tabs.sendMessage(tab.id, { message: "start" });
   }
 });
 
@@ -21,15 +21,14 @@ chrome.runtime.onMessage.addListener(async (response, callback) => {
 });
 
 chrome.runtime.onMessage.addListener(async (response, callback) => {
-  if (response.message === "open_mfacebook") {
-    if (response.message === "open_new_tab" && response.error === false) {
-      chrome.tabs.create({ url: response.url }, function (tab) {
-        new_tab_id = tab.id;
-      });
-    } else {
-      chrome.runtime.sendMessage({ message: "error", message: response.error_message });
-    }
-  }
+  if (response.message === "open_new_tab" && response.error === false) {
+    chrome.tabs.create({ url: response.url }, function (tab) {
+      new_tab_id = tab.id;
+    });
+  } 
+  // else {
+  //   chrome.runtime.sendMessage({ message: "error", message: response.error_message });
+  // }
 });
 
 // //To kill new Tab
