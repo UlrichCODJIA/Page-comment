@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener(async (response, callback) => {
 
 //To open new tab
 chrome.runtime.onMessage.addListener(async (response, callback) => {
-  if (response.message === "get_uid") {
+  if (response.message === "start Page Comment") {
     chrome.scripting.executeScript(
       {
         target: { tabId: new_tab_id },
