@@ -4,7 +4,7 @@ var new_tab_id
 chrome.runtime.onMessage.addListener(async (response, callback) => {
   if (response.message === "start Page Comment") {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    chrome.tabs.sendMessage(tab.id, { message: "start" });
+    chrome.runtime.sendMessage({ message: "start"});
   }
 });
 
