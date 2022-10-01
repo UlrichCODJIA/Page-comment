@@ -109,7 +109,7 @@ function download(profiles_hrefs, profiles_href_length, filename) {
 }
 
 function get_uid(comments_list) {
-  const profiles_href = response.profiles_href;
+  const profiles_href = comments_list;
   const profiles_hrefs = {};
   var profiles_href_length = Object.keys(profiles_href).length;
   for (const i in profiles_href) {
