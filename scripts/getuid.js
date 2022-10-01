@@ -95,74 +95,14 @@ function loadTillEnd() {
           }
         }
       }
-      const uid = get_uid(comments_list);
-      download(uid[0], uid[1], "UID's list of people who had commented");
+      chrome.runtime.sendMessage(
+        { message: "profile_href_loaded", profiles_href: comments_list },
+        function (response) {
+          console.log("profile_href_loaded");
+        }
+      );
     }
   });
-}
-
-function onStartedDownload(id) {
-  console.log(`Started downloading: ${id}`);
-}
-
-function onFailed(error) {
-  console.log(`Download failed: ${error}`);
-}
-
-function download(profiles_hrefs, profiles_href_length, filename) {
-  var time = setInterval(() => {
-    if (profiles_href_length == Object.keys(profiles_hrefs).length) {
-      clearInterval(time);
-      var allEntries = "";
-      for (const i in profiles_hrefs) {
-        allEntries = allEntries.concat(i + " : " + profiles_hrefs[i] + "\n");
-      }
-      const blob = new Blob([allEntries], {
-        type: "text/plain",
-      });
-      var url = URL.createObjectURL(blob);
-      chrome.downloads
-        .download({
-          url: url,
-          filename: "PageComment/" + filename + ".txt",
-          conflictAction: "uniquify",
-        })
-        .then(onStartedDownload, onFailed);
-    }
-  });
-}
-
-function get_uid(comments_list) {
-  const profiles_href = comments_list;
-  const profiles_hrefs = {};
-  var profiles_href_length = Object.keys(profiles_href).length;
-  for (const i in profiles_href) {
-    if (profiles_href[i].search("http") != -1) {
-      const myRequest = new Request(profiles_href[i]);
-      fetch(myRequest)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error, status = ${response.status}`);
-          }
-          return response.text();
-        })
-        .then((data) => {
-          let uid = /"userID":"([^"]+)"/.exec(data);
-          if (uid != null) {
-            profiles_hrefs[i] = uid[1];
-          } else {
-            profiles_hrefs[i] = "";
-            // profiles_href_length -= 1
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      profiles_hrefs[i] = profiles_href[i];
-    }
-  }
-  return [profiles_hrefs, profiles_href_length];
 }
 
 loadTillEnd();
