@@ -5,14 +5,38 @@ function findChildComments(comment, list) {
   let newComment = {};
   if (i !== null) {
     let name = i.children[0].innerText;
-    let link =
+    let raw_link =
       i.children[0].children[0] &&
       i.children[0].children[0].attributes &&
       (i.children[0].children[0].attributes[
         i.children[0].children[0].attributes.length - 1
       ].textContent ||
         "ERRORERROR");
-    link = `https://www.facebook.com${link}`;
+    raw_link = `https://www.facebook.com${link}`;
+    let link;
+    if (raw_link.indexOf("profile.php?id") != -1) {
+      var url = new URL(raw_link);
+      var uid = url.searchParams.get("id");
+      link = uid;
+    } else {
+      if (raw_link.indexOf("?__cft__") != -1) {
+        link = raw_link.slice(0, raw_link.indexOf("?__cft__"));
+      } else if (raw_link.indexOf("?eav=") != -1) {
+        link = raw_link.slice(0, raw_link.indexOf("?eav="));
+      } else {
+        if (
+          (raw_link,
+          /(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/.test(
+            raw_link
+          ) == true)
+        ) {
+          link =
+            /(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/.exec(
+              raw_link
+            )[0];
+        }
+      }
+    }
     newComment[name] = link;
     newComment = { name, link, child: [] };
     list.push(newComment);
