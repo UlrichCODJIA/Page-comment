@@ -3,6 +3,7 @@ const open_mfacebook_btn = document.getElementById("open_mfacebook");
 const get_uid_btn = document.getElementById("get_uid");
 
 function start() {
+  loader.style.display = "block";
   chrome.runtime.sendMessage(
     { message: "start Page Comment" },
     function (response) {
@@ -12,19 +13,27 @@ function start() {
 }
 
 function open_new_tab() {
-  chrome.runtime.sendMessage(
-    { message: "open_mfacebook" },
-    function (response) {}
-  );
+  chrome.runtime.sendMessage({ message: "open_mfacebook" });
 }
 
 open_mfacebook_btn.addEventListener("click", open_new_tab);
 get_uid_btn.addEventListener("click", start);
 
 chrome.runtime.onMessage.addListener((response, callback) => {
-  if (response.message === "profile_href_loaded") {
-    const uid = get_uid(response.profiles_href);
-    download(uid[0], uid[1], "UID's list of people who had commented");
+  switch (response.message) {
+    case "profile_href_loaded":
+      const uid = get_uid(response.profiles_href);
+      download(uid[0], uid[1], "UID's list of people who had commented");
+      chrome.runtime.sendMessage({ message: "close_current_tab" });
+      break;
+    case "error":
+      var h5 = document.createElement("h5");
+      h5.appendChild(document.createTextNode(`Error: ${response.error_msg}`));
+      document.body.children[0].insertBefore(
+        h5,
+        document.body.children[0].children[5]
+      );
+      break;
   }
 });
 
@@ -66,7 +75,7 @@ function download(profiles_hrefs, profiles_href_length, filename) {
           url: url,
           filename:
             "PageComment/" +
-            filename +
+            "Report-" +
             now.getFullYear() +
             "-" +
             now.getMonth() +
@@ -77,7 +86,7 @@ function download(profiles_hrefs, profiles_href_length, filename) {
             "_" +
             now.getMinutes() +
             "_" +
-            now.getMilliseconds +
+            now.getMilliseconds() +
             ".txt",
           conflictAction: "uniquify",
         })
@@ -88,6 +97,7 @@ function download(profiles_hrefs, profiles_href_length, filename) {
       XLSX.writeFile(
         wb,
         "PageComment/" +
+          "Report-" +
           now.getFullYear() +
           "-" +
           now.getMonth() +
@@ -98,7 +108,7 @@ function download(profiles_hrefs, profiles_href_length, filename) {
           "_" +
           now.getMinutes() +
           "_" +
-          now.getMilliseconds +
+          now.getMilliseconds() +
           ".xlsx"
       );
     }
