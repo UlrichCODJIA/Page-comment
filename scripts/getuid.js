@@ -29,11 +29,22 @@ function findChildComments(comment, list) {
 }
 
 function load() {
-  document.querySelector("._108_").click();
+  //to click more
+  if (document.querySelector("._108_")) {
+    document.querySelector("._108_").click();
+  }
   // click on subcomments
-  document.querySelectorAll("._2b1h.async_elem > a").forEach((a) => a.click());
+  if (document.querySelectorAll("._2b1h.async_elem > a")) {
+    document
+      .querySelectorAll("._2b1h.async_elem > a")
+      .forEach((a) => a.click());
+  }
   // click on loadmore subcomments
-  document.querySelectorAll("._2b1l > a.async_elem").forEach((a) => a.click());
+  if (document.querySelectorAll("._2b1l > a.async_elem")) {
+    document
+      .querySelectorAll("._2b1l > a.async_elem")
+      .forEach((a) => a.click());
+  }
 }
 
 function loadTillEnd() {
@@ -75,58 +86,59 @@ function onFailed(error) {
 }
 
 function download(profiles_hrefs, profiles_href_length, filename) {
-    var time = setInterval(() => {
-        if (profiles_href_length == Object.keys(profiles_hrefs).length) {
-          clearInterval(time);
-          var allEntries = "";
-          for (const i in profiles_hrefs) {
-            allEntries = allEntries.concat(i + " : " + profiles_hrefs[i] + "\n");
-          }
-          const blob = new Blob([allEntries], {
-            type: "text/plain",
-          });
-          var url = URL.createObjectURL(blob);
-          chrome.downloads
-            .download({
-              url: url,
-              filename: "PageComment/" + filename + ".txt",
-              conflictAction: "uniquify",
-            }).then(onStartedDownload, onFailed)
-          }
-      })
+  var time = setInterval(() => {
+    if (profiles_href_length == Object.keys(profiles_hrefs).length) {
+      clearInterval(time);
+      var allEntries = "";
+      for (const i in profiles_hrefs) {
+        allEntries = allEntries.concat(i + " : " + profiles_hrefs[i] + "\n");
+      }
+      const blob = new Blob([allEntries], {
+        type: "text/plain",
+      });
+      var url = URL.createObjectURL(blob);
+      chrome.downloads
+        .download({
+          url: url,
+          filename: "PageComment/" + filename + ".txt",
+          conflictAction: "uniquify",
+        })
+        .then(onStartedDownload, onFailed);
+    }
+  });
 }
 
-function get_uid (comments_list) {
-    const profiles_href = response.profiles_href;
-    const profiles_hrefs = {};
-    var profiles_href_length = Object.keys(profiles_href).length;
-    for (const i in profiles_href) {
+function get_uid(comments_list) {
+  const profiles_href = response.profiles_href;
+  const profiles_hrefs = {};
+  var profiles_href_length = Object.keys(profiles_href).length;
+  for (const i in profiles_href) {
     if (profiles_href[i].search("http") != -1) {
-        const myRequest = new Request(profiles_href[i]);
-        fetch(myRequest)
+      const myRequest = new Request(profiles_href[i]);
+      fetch(myRequest)
         .then((response) => {
-            if (!response.ok) {
+          if (!response.ok) {
             throw new Error(`HTTP error, status = ${response.status}`);
-            }
-            return response.text();
+          }
+          return response.text();
         })
         .then((data) => {
-            let uid = /"userID":"([^"]+)"/.exec(data);
-            if (uid != null) {
+          let uid = /"userID":"([^"]+)"/.exec(data);
+          if (uid != null) {
             profiles_hrefs[i] = uid[1];
-            } else {
+          } else {
             profiles_hrefs[i] = "";
             // profiles_href_length -= 1
-            }
+          }
         })
         .catch((error) => {
-            console.log(error);
+          console.log(error);
         });
     } else {
-        profiles_hrefs[i] = profiles_href[i];
+      profiles_hrefs[i] = profiles_href[i];
     }
-    }
-    return [profiles_hrefs, profiles_href_length]
-};
+  }
+  return [profiles_hrefs, profiles_href_length];
+}
 
 loadTillEnd();
