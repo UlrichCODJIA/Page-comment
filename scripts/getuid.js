@@ -12,7 +12,7 @@ function findChildComments(comment, list) {
         i.children[0].children[0].attributes.length - 1
       ].textContent ||
         "ERRORERROR");
-    raw_link = `https://www.facebook.com${link}`;
+    raw_link = `https://www.facebook.com${raw_link}`;
     let link;
     if (raw_link.indexOf("profile.php?id") != -1) {
       var url = new URL(raw_link);
