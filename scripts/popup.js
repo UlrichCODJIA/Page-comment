@@ -1,3 +1,7 @@
+const loader = document.getElementById("load");
+const open_mfacebook_btn = document.getElementById("open_mfacebook");
+const get_uid_btn = document.getElementById("get_uid");
+
 function start() {
   chrome.runtime.sendMessage(
     { message: "start Page Comment" },
@@ -14,10 +18,8 @@ function open_new_tab() {
   );
 }
 
-document
-  .getElementById("open_mfacebook")
-  .addEventListener("click", open_new_tab);
-document.getElementById("get_uid").addEventListener("click", start);
+open_mfacebook_btn.addEventListener("click", open_new_tab);
+get_uid_btn.addEventListener("click", start);
 
 chrome.runtime.onMessage.addListener((response, callback) => {
   if (response.message === "profile_href_loaded") {
