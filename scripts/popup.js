@@ -5,9 +5,9 @@ const get_uid_btn = document.getElementById("get_uid");
 function start() {
   loader.style.display = "block";
   chrome.runtime.sendMessage(
-    { message: "start Page Comment" },
+    { message: "start Page-Comment" },
     function (response) {
-      console.log("start Page Comment");
+      console.log("start Page-Comment");
     }
   );
 }
