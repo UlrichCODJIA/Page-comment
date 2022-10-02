@@ -4,7 +4,17 @@ function findChildComments(comment, list) {
   let i = comment.querySelector("._2b06");
   let newComment = {};
   if (i !== null) {
-    let name = i.children[0].innerText;
+    let name;
+    let parent_element_name_childnodes = i.children[0].children[0].childNodes;
+    if (parent_element_name_childnodes.length > 1) {
+      for (var j = 0; j < parent_element_name_childnodes.length; j++) {
+        if (parent_element_name_childnodes[j].nodeName == "#test") {
+          name = parent_element_name_childnodes[j].nodeValue.trim();
+        }
+      }
+    } else {
+      name = i.children[0].innerText;
+    }
     let raw_link =
       i.children[0].children[0] &&
       i.children[0].children[0].attributes &&

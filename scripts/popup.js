@@ -24,7 +24,6 @@ chrome.runtime.onMessage.addListener((response, callback) => {
     case "profile_href_loaded":
       const uid = get_uid(response.profiles_href);
       download(uid[0], uid[1], "UID's list of people who had commented");
-      chrome.runtime.sendMessage({ message: "close_current_tab" });
       break;
     case "error":
       var h5 = document.createElement("h5");
@@ -111,6 +110,7 @@ function download(profiles_hrefs, profiles_href_length, filename) {
           now.getMilliseconds() +
           ".xlsx"
       );
+      // chrome.runtime.sendMessage({ message: "close_current_tab" });
     }
   });
 }
