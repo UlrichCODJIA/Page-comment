@@ -139,6 +139,7 @@ function get_uid(comments_list) {
           }
         })
         .catch((error) => {
+          console.log(error)
           var h5 = document.createElement("h5");
           h5.appendChild(document.createTextNode(`Error: ${error.message}`));
           document.body.children[0].insertBefore(

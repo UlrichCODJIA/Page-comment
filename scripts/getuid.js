@@ -1,27 +1,21 @@
 function findChildComments(comment, list) {
   let index = 0;
   // Process comment
-  let i = comment.querySelector("._2b06");
+  let i = comment.querySelector("._2b05");
   let newComment = {};
   if (i !== null) {
     let name;
-    let parent_element_name_childnodes = i.children[0].children[0].childNodes;
-    if (parent_element_name_childnodes.length > 1) {
-      for (var j = 0; j < parent_element_name_childnodes.length; j++) {
-        if (parent_element_name_childnodes[j].nodeName == "#test") {
-          name = parent_element_name_childnodes[j].nodeValue.trim();
+    let comment_a = i.children[0].childNodes;
+    if (comment_a.length > 1) {
+      for (var j = 0; j < comment_a.length; j++) {
+        if (comment_a[j].nodeName == "#text") {
+          name = comment_a[j].nodeValue.trim();
         }
       }
     } else {
       name = i.children[0].innerText;
     }
-    let raw_link =
-      i.children[0].children[0] &&
-      i.children[0].children[0].attributes &&
-      (i.children[0].children[0].attributes[
-        i.children[0].children[0].attributes.length - 1
-      ].textContent ||
-        "ERRORERROR");
+    let raw_link = i.children[0].attributes.href.value || "ERRORERROR";
     raw_link = `https://www.facebook.com${raw_link}`;
     let link;
     if (raw_link.indexOf("profile.php?id") != -1) {
@@ -91,6 +85,7 @@ function loadTillEnd() {
     } else {
       clearInterval(time);
       let list = [];
+      comments = document.querySelectorAll("._2b04");
       //Find all comments on page
       for (var i = 0; i < comments.length; ) {
         i += findChildComments(comments[i], list); // Comments processing and hierarchy creation
@@ -105,6 +100,7 @@ function loadTillEnd() {
           }
         }
       }
+      console.log(Object.keys(comments_list).length)
       chrome.runtime.sendMessage(
         { message: "profile_href_loaded", profiles_href: comments_list },
         function (response) {
@@ -112,7 +108,7 @@ function loadTillEnd() {
         }
       );
     }
-  });
+  }, 5000);
 }
 
 loadTillEnd();

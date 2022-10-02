@@ -20,6 +20,13 @@
         text-align: center;
         font-size: 16px;
       }
+      #header_div {
+        background-color: #336dab;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
       .loader {
         border: 10px solid #f3f3f3;
         border-radius: 50%;
@@ -54,7 +61,10 @@
   </head>
   <body>
     <div class="container mt-3" style="width: 450px">
-      <h2 class="text-center">UID's of people who had reacted</h2>
+      <div id="header_div">
+        <h2 class="text-center" style="color: white;">PAGE-COMMENT</h2>
+      </div>
+      <br>
       <div class="col-md-12 text-center">
         <h5>Steps</h5>
         <p>1 - Click on "Open mobile Facebook" button on the popup</p>
@@ -70,7 +80,7 @@
       <table class="table table-bordered" id="uid_table">
         <thead>
           <tr>
-            <th>N°</th>
+            <th>Firstname / Lastname</th>
             <th>UID</th>
           </tr>
         </thead>

@@ -21,13 +21,17 @@ chrome.runtime.onMessage.addListener(async (response, callback) => {
 });
 
 chrome.runtime.onMessage.addListener(async (response, callback) => {
-  if (response.message === "open_new_tab" && response.error === false) {
-    chrome.tabs.create({ url: response.url }, function (tab) {
-      new_tab_id = tab.id;
-    });
-  } 
-  else {
-    chrome.runtime.sendMessage({ message: "error", error_msg: response.error_message });
+  if (response.message === "open_new_tab") {
+    switch (response.error) {
+      case false:
+        chrome.tabs.create({ url: response.url }, function (tab) {
+          new_tab_id = tab.id;
+        });
+        break;
+      case true:
+        chrome.runtime.sendMessage({ message: "error", error_msg: response.error_message });
+        break;
+    }
   }
 });
 
