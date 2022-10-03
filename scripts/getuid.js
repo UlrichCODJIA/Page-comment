@@ -41,8 +41,11 @@ function findChildComments(comment, list) {
         }
       }
     }
-    newComment[name] = link;
-    newComment = { name, link, child: [] };
+    newComment['name'] = name;
+    newComment['link'] = link;
+    let comments_text = i.parentElement.children[1].innerText;
+    newComment['comments_text'] = comments_text;
+    newComment['child'] = [];
     list.push(newComment);
   }
 
@@ -90,17 +93,25 @@ function loadTillEnd() {
       for (var i = 0; i < comments.length; ) {
         i += findChildComments(comments[i], list); // Comments processing and hierarchy creation
       }
-      const comments_list = {};
+      const comments_list = [];
       for (var i = 0; i < list.length; i++) {
-        comments_list[list[i]["name"]] = list[i]["link"];
+        comments_list.push({
+          name: list[i]["name"],
+          link: list[i]["link"],
+          comments_text: list[i]["comments_text"],
+        });
         if (list[i]["child"].length != 0) {
           const childs = list[i]["child"];
           for (var j = 0; j < childs.length; j++) {
-            comments_list[childs[j]["name"]] = childs[j]["link"];
+            comments_list.push({
+              name: childs[j]["name"],
+              link: childs[j]["link"],
+              comments_text: childs[j]["comments_text"],
+            });
           }
         }
       }
-      console.log(Object.keys(comments_list).length)
+      console.log(Object.keys(comments_list).length);
       chrome.runtime.sendMessage(
         { message: "profile_href_loaded", profiles_href: comments_list },
         function (response) {

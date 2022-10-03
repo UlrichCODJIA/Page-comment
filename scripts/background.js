@@ -1,5 +1,3 @@
-var new_tab_id
-
 //To detect get UID button click action on popup
 chrome.runtime.onMessage.addListener(async (response, callback) => {
   if (response.message === "open_mfacebook") {
@@ -11,9 +9,10 @@ chrome.runtime.onMessage.addListener(async (response, callback) => {
 //To open new tab
 chrome.runtime.onMessage.addListener(async (response, callback) => {
   if (response.message === "start Page-Comment") {
+    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     chrome.scripting.executeScript(
       {
-        target: { tabId: new_tab_id },
+        target: { tabId: tab.id },
         files: ["./scripts/getuid.js"],
       }
     );
@@ -25,7 +24,6 @@ chrome.runtime.onMessage.addListener((response, callback) => {
     switch (response.error) {
       case false:
         chrome.tabs.create({ url: response.url }, function (tab) {
-          new_tab_id = tab.id;
         });
         break;
       case true:
