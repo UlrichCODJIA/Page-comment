@@ -1,11 +1,22 @@
 const loader = document.getElementById("load");
 const open_mfacebook_btn = document.getElementById("open_mfacebook");
 const get_uid_btn = document.getElementById("get_uid");
+const get_uid_origin_btn = document.getElementById("get_uid_origin");
 
 function start() {
   loader.style.display = "block";
   chrome.runtime.sendMessage(
     { message: "start Page-Comment" },
+    function (response) {
+      console.log("start Page-Comment");
+    }
+  );
+}
+
+function start_origin() {
+  loader.style.display = "block";
+  chrome.runtime.sendMessage(
+    { message: "start Page-Comment origin" },
     function (response) {
       console.log("start Page-Comment");
     }
@@ -18,6 +29,7 @@ function open_new_tab() {
 
 open_mfacebook_btn.addEventListener("click", open_new_tab);
 get_uid_btn.addEventListener("click", start);
+get_uid_origin_btn.addEventListener("click", start_origin);
 
 chrome.runtime.onMessage.addListener((response, callback) => {
   switch (response.message) {
