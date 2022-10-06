@@ -94,7 +94,6 @@ function get_posts() {
   for (var i = 0; i < y.length; i++) {
     try {
       if (
-        y[i].parentElement.getAttribute("role") == "feed" &&
         y[i].children[0].children[0].children[0].children[0].getAttribute(
           "role"
         ) == "article"
@@ -124,10 +123,32 @@ function getElementsByXPath(xpath, parent) {
 function get_comments(post_index) {
   var post = get_posts()[post_index];
   var comments_container;
-  const ul_elmts = getElementsByXPath(
-    "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]",
-    post
-  )[0].children;
+  var ul_elmts;
+  try {
+    if (
+      getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]",
+        post
+      )[0].children.length != 0
+    ) {
+      ul_elmts = getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]",
+        post
+      )[0].children;
+    }
+  } catch (err) {
+    if (
+      getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[8]/div/div[4]/div/div/div[2]",
+        post
+      )[0].children.length != 0
+    ) {
+      ul_elmts = getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[8]/div/div[4]/div/div/div[2]",
+        post
+      )[0].children;
+    }
+  }
   try {
     for (var i = 0; i < ul_elmts.length; i++) {
       if (ul_elmts[i].localName == "ul") {
@@ -211,10 +232,23 @@ function findChildComments(comment, list) {
 function load(post_index) {
   //to click more
   try {
-    const all_comments = getElementsByXPath(
-      "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/div[4]/div[1]/div[2]/span/span",
-      get_posts()[post_index]
-    )[0];
+    var all_comments;
+    if (
+      getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/div[4]/div[1]/div[2]/span/span",
+        get_posts()[post_index]
+      )[0] != undefined
+    ) {
+      all_comments = getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/div[4]/div[1]/div[2]/span/span",
+        get_posts()[post_index]
+      )[0];
+    } else {
+      all_comments = getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[8]/div/div[4]/div/div/div[2]/div[4]/div[1]/div[2]/span/span",
+        get_posts()[post_index]
+      )[0];
+    }
     if (all_comments) {
       all_comments.click();
     }
@@ -223,10 +257,23 @@ function load(post_index) {
   }
   // click on subcomments
   try {
-    const sub_comments = getElementsByXPath(
-      "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/ul/li/div[2]/div/div[2]/div[2]/span[2]/span",
-      get_posts()[post_index]
-    );
+    var sub_comments;
+    if (
+      getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/ul/li/div[2]/div/div[2]/div[2]/span[2]/span",
+        get_posts()[post_index]
+      ).length != 0
+    ) {
+      sub_comments = getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/ul/li/div[2]/div/div[2]/div[2]/span[2]/span",
+        get_posts()[post_index]
+      );
+    } else {
+      sub_comments = getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[8]/div/div[4]/div/div/div[2]/ul/li/div[2]/div/div[2]/div[2]/span[2]/span",
+        get_posts()[post_index]
+      );
+    }
     if (sub_comments) {
       sub_comments.forEach((elmt) => elmt.click());
     }
@@ -241,17 +288,24 @@ function loadTillEnd(post_index) {
   load(post_index);
   var time = setInterval(function () {
     if (
-      getElementsByXPath(
+      (getElementsByXPath(
         "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/div[4]/div[1]/div[2]/span/span",
         get_posts()[post_index]
       )[0] != undefined &&
-      getElementsByXPath(
-        "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/ul/li/div[2]/div/div[2]/div[2]/span[2]/span",
+        getElementsByXPath(
+          "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/ul/li/div[2]/div/div[2]/div[2]/span[2]/span",
+          get_posts()[post_index]
+        ).length != 0) ||
+      (getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[8]/div/div[4]/div/div/div[2]/div[4]/div[1]/div[2]/span/span",
         get_posts()[post_index]
-      ).length != 0
+      )[0] != undefined &&
+        getElementsByXPath(
+          "div/div/div/div/div/div/div/div/div/div[8]/div/div[4]/div/div/div[2]/ul/li/div[2]/div/div[2]/div[2]/span[2]/span",
+          get_posts()[post_index]
+        ).length != 0)
     ) {
       load(post_index);
-      // comments_length = get_comments(post_index).length;
     } else {
       clearInterval(time);
       let list = [];
@@ -312,10 +366,23 @@ function event_listener_adder() {
   const posts_list = get_posts();
   const all_btn_and_index = {};
   for (var i = 0; i < posts_list.length; i++) {
-    const all_comments = getElementsByXPath(
-      "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/div[4]/div[1]/div[2]/span/span",
-      posts_list[i]
-    )[0];
+    var all_comments;
+    if (
+      getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/div[4]/div[1]/div[2]/span/span",
+        posts_list[i]
+      ).length != 0
+    ) {
+      all_comments = getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[2]/div/div[4]/div/div/div[2]/div[4]/div[1]/div[2]/span/span",
+        posts_list[i]
+      )[0];
+    } else {
+      all_comments = getElementsByXPath(
+        "div/div/div/div/div/div/div/div/div/div[8]/div/div[4]/div/div/div[2]/div[4]/div[1]/div[2]/span/span",
+        posts_list[i]
+      )[0];
+    }
     all_btn_and_index[i] = all_comments;
   }
   for (const j in all_btn_and_index) {
