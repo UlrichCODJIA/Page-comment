@@ -2,6 +2,11 @@ const loader = document.getElementById("load");
 const open_mfacebook_btn = document.getElementById("open_mfacebook");
 const get_uid_btn = document.getElementById("get_uid");
 const get_uid_origin_btn = document.getElementById("get_uid_origin");
+const switcher = document.getElementById("switcher");
+const origin_fb_btn = document.getElementById("origin_fb_btn");
+const m_fb_btn = document.getElementById("m_fb_btn");
+const m_fb = document.getElementById("m_fb");
+const origin_fb = document.getElementById("origin_fb");
 
 function start() {
   loader.style.display = "block";
@@ -14,7 +19,6 @@ function start() {
 }
 
 function start_origin() {
-  loader.style.display = "block";
   chrome.runtime.sendMessage(
     { message: "start Page-Comment origin" },
     function (response) {
@@ -27,9 +31,18 @@ function open_new_tab() {
   chrome.runtime.sendMessage({ message: "open_mfacebook" });
 }
 
+origin_fb_btn.addEventListener("click", () => {
+  switcher.style.display = "none";
+  origin_fb.style.display = "block";
+});
+m_fb_btn.addEventListener("click", () => {
+  switcher.style.display = "none";
+  m_fb.style.display = "block";
+});
 open_mfacebook_btn.addEventListener("click", open_new_tab);
 get_uid_btn.addEventListener("click", start);
 get_uid_origin_btn.addEventListener("click", start_origin);
+
 
 chrome.runtime.onMessage.addListener((response, callback) => {
   switch (response.message) {

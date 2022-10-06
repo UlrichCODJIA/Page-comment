@@ -65,13 +65,26 @@
         <h2 class="text-center" style="color: white;">PAGE-COMMENT</h2>
       </div>
       <br>
-      <div class="col-md-12 text-center">
+      <div class="col-md-12 text-center" id="switcher">
+        <p>Do you have "Show n other comments" in the "comments" section of the targeted post ?</p>
+        <button id="origin_fb_btn">Yes</button>
+        <button id="m_fb_btn">No</button>
+      </div>
+      <div class="col-md-12 text-center" id="origin_fb" style="display: none">
+        <h5>Steps</h5>
+        <p>1 - Click on "All comments" in the "comments" section of the targeted post.</p>
+        <p>2 - Click on "Get UID" button on the extension popup.</p>
+        <p>3 - Click on "Show n other comments" in the "comments" section of the targeted post.</p>
+        <p>4 - Open the extension popup and wait.</p>
+        <br>
+        <button id="get_uid_origin">Get UID</button>
+        <br>
+      </div>
+      <div class="col-md-12 text-center" id="m_fb" style="display: none">
         <h5>Steps</h5>
         <p>1 - Click on "Open mobile Facebook" button on the popup</p>
         <p>2 - Open the selected post comments section in the newly opened tab</p>
         <p>3 - Click on "Get UID" button on the popup</p>
-        <br>
-        <button id="get_uid_origin">Get UID</button>
         <br>
         <button id="open_mfacebook">Open mobile Facebook</button>
         <button id="get_uid">Get UID</button>
@@ -79,7 +92,7 @@
         <div class="loader" id="load" style="display: none"></div>
       </div>      
       <br />
-      <table class="table table-bordered" id="uid_table">
+      <table class="table table-bordered" id="uid_table" style="display: none">
         <thead>
           <tr>
             <th>Firstname / Lastname</th>
